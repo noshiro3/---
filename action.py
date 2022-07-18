@@ -1,4 +1,5 @@
 #データベースの値の変更をするファイル
+from select import select
 import sqlite3 
 
 dbname = 'EC_table'
@@ -16,7 +17,7 @@ def reason_for_return():
     c.execute('SELECT * FROM Reason_return')
     Reason_return_item = c.fetchone()
     
-    print('返品理由->')
+    print('返品理由->',end='')
     check_Reason_return = input()
     if check_Reason_return == 'サイズが合わない':
         c.execute(f'UPDATE Reason_return set サイズが合わない = {Reason_return_item[1]+1}')
@@ -147,8 +148,13 @@ def calculator():
     select_product = input()
     return return_rate()+reason_for_return_calculator()+review_rate()+purchase_value()
 
-value = calculator()
-print("選んだ商品の信頼度は" + str(100 + value) + "点/100点です。")
+print('返品なら「1」点数を確認するなら「2」->',end='')
+select_action = int(input())
+if select_action == 1:
+    reason_for_return()
+elif select_action == 2:
+    value = calculator()
+    print("選んだ商品の信頼度は" + str(100 + value) + "点/100点です。")
 
 c.close()
 conn.close()
